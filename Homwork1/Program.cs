@@ -21,8 +21,27 @@
             public int gold = 1500;
         }
 
+        class ItemList
+        {
+            public string[] itemName = {"무쇠갑옷" , "스파르타의 창" , "낡은 검"};
+            public string[] itemStateType = { "방어력", "공격력", "공격력" };
+            public int[] itemState = {5 , 7 , 2};
+            public string[] itemDescription = 
+                {"무쇠로 만들어져 튼튼한 갑옷입니다." , 
+                 "스파르타의 전사들이 사용했다는 전설의 창입니다." ,
+                 "쉽게 볼 수 있는 낡은 검 입니다."};
 
-        static void Main()
+            public void itemInfo()
+            {
+                for (int i = 0; i < itemName.Length; i++)
+                {
+                    Console.WriteLine($"{itemName[i]}       | {itemStateType[i]}  {itemState[i]} | {itemDescription[i]}");
+                }
+            }
+        }
+
+
+        static void Main(string[] args)
         {
             int Success;
             int state_Success;
@@ -40,13 +59,13 @@
 
                 if (isSuccess)
                 {
+                    // 1. 상태 보기 화면
                     if (Success == 1)
                     {
                         Console.Clear();
 
                         while (true)
                         {
-                            // 1. 상태 보기 화면
                             Console.WriteLine("상태 보기\n캐릭터의 정보가 표시됩니다.\n");
 
                             State state = new State();
@@ -80,11 +99,19 @@
                         }
 
                     }
-                    else if ()
+
+                    // 2. 인벤토리 화면
+                    else if (Success == 2)
                     {
-                        // 2. 인벤토리 화면
+                        Console.Clear();
+
                         Console.WriteLine("인벤토리\n보유 중인 아이템을 관리할 수 있습니다.\n\n");
-                        Console.WriteLine("[아이템 목록]\n\n1. 장착 관리\n0. 나가기");
+                        Console.WriteLine("[아이템 목록]");
+
+                        ItemList item = new ItemList();
+                        item.itemInfo();
+
+                        Console.WriteLine("\n1. 장착 관리\n0. 나가기\n");
                         Console.Write("원하시는 행동을 입력해 주세요.\n>>");
                     }
                     else
