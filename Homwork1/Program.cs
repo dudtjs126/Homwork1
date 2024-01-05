@@ -1,16 +1,9 @@
-﻿namespace Homwork1
-{  
+﻿using System.Runtime.Intrinsics.X86;
+
+namespace Homwork1
+{
     internal class Program
     {
-        /*public static void AnyKey()
-        {
-            Console.WriteLine("잘못된 입력입니다.\n아무키나 입력하면 처음 화면으로 돌아갑니다.");
-            Console.ReadKey(true);
-            Main();
-        }*/
-
-
-
 
         class State
         {
@@ -23,29 +16,46 @@
 
         class ItemList
         {
-            public string[] itemName = {"무쇠갑옷" , "스파르타의 창" , "낡은 검"};
+            public int[] itemNumber = { 1, 2, 3 };
+            public bool[] itemEquip = { false, false, false };
+            public string[] itemName = { "무쇠갑옷", "스파르타의 창", "낡은 검" };
             public string[] itemStateType = { "방어력", "공격력", "공격력" };
-            public int[] itemState = {5 , 7 , 2};
-            public string[] itemDescription = 
-                {"무쇠로 만들어져 튼튼한 갑옷입니다." , 
+            public int[] itemState = { 5, 7, 2 };
+            public string[] itemDescription =
+                {"무쇠로 만들어져 튼튼한 갑옷입니다." ,
                  "스파르타의 전사들이 사용했다는 전설의 창입니다." ,
                  "쉽게 볼 수 있는 낡은 검 입니다."};
 
-            public void itemInfo()
+            public void inventory()
             {
                 for (int i = 0; i < itemName.Length; i++)
                 {
-                    Console.WriteLine($"{itemName[i]}       | {itemStateType[i]}  {itemState[i]} | {itemDescription[i]}");
+                    Console.WriteLine($"- {itemName[i]}       | {itemStateType[i]}  {itemState[i]} | {itemDescription[i]}");
+                }
+            }
+
+            public void itemManage()
+            {
+                for (int i = 0; i < itemName.Length; i++)
+                {
+                    if (itemEquip[i] == true)
+                    {
+                        Console.WriteLine($"- {itemNumber[i]} [E] {itemName[i]}       | {itemStateType[i]}  {itemState[i]} | {itemDescription[i]}");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"- {itemNumber[i]} {itemName[i]}       | {itemStateType[i]}  {itemState[i]} | {itemDescription[i]}");
+                    }
                 }
             }
         }
 
 
+
         static void Main(string[] args)
         {
             int Success;
-            int state_Success;
-
+            int SuccessInput;
 
             while (true)
             {
@@ -81,11 +91,12 @@
                             Console.Write("\n0. 나가기\n원하시는 행동을 입력해주세요.\n>>");
 
                             choiceMenu = Console.ReadLine();
-                            isSuccess = int.TryParse(choiceMenu, out state_Success);
+                            isSuccess = int.TryParse(choiceMenu, out SuccessInput);
+
 
                             if (isSuccess)
                             {
-                                if (state_Success == 0)
+                                if (SuccessInput == 0)
                                 {
                                     Console.Clear();
                                     break;
@@ -96,8 +107,12 @@
                                     Console.WriteLine("잘못된 입력입니다.\n0을 입력하여 나가기를 진행해 주세요.\n");
                                 }
                             }
+                            else
+                            {
+                                Console.Clear();
+                                Console.WriteLine("잘못된 입력입니다.\n0을 입력하여 나가기를 진행해 주세요.\n");
+                            }
                         }
-
                     }
 
                     // 2. 인벤토리 화면
@@ -105,14 +120,118 @@
                     {
                         Console.Clear();
 
-                        Console.WriteLine("인벤토리\n보유 중인 아이템을 관리할 수 있습니다.\n\n");
-                        Console.WriteLine("[아이템 목록]");
+                        while (true)
+                        {
+                            Console.WriteLine("인벤토리\n보유 중인 아이템을 관리할 수 있습니다.\n\n");
+                            Console.WriteLine("[아이템 목록]");
 
-                        ItemList item = new ItemList();
-                        item.itemInfo();
+                            ItemList item = new ItemList();
+                            item.inventory();
 
-                        Console.WriteLine("\n1. 장착 관리\n0. 나가기\n");
-                        Console.Write("원하시는 행동을 입력해 주세요.\n>>");
+                            Console.WriteLine("\n1. 장착 관리\n0. 나가기\n");
+                            Console.Write("원하시는 행동을 입력해 주세요.\n>>");
+
+                            choiceMenu = Console.ReadLine();
+                            isSuccess = int.TryParse(choiceMenu, out SuccessInput);
+
+                            if (isSuccess)
+                            {
+                                Console.Clear();
+
+                                if (SuccessInput == 1)
+                                {
+                                    while (true)
+                                    {
+                                        Console.WriteLine("인벤토리 - 장착 관리\n보유 중인 아이템을 관리할 수 있습니다.\n");
+                                        Console.WriteLine("[아이템 목록]");
+
+                                        item.itemManage();
+
+                                        Console.WriteLine("\n0. 나가기\n\n원하시는 행동을 입력해주세요.");
+                                        Console.Write(">>");
+
+                                        choiceMenu = Console.ReadLine();
+                                        isSuccess = int.TryParse(choiceMenu, out SuccessInput);
+
+                                        if (isSuccess)
+                                        {
+                                            switch (SuccessInput)
+                                            {
+                                                case 0:
+                                                    Console.Clear();
+                                                    break;
+
+                                                case 1:
+                                                    if (item.itemEquip[0] == false)
+                                                    {
+                                                        item.itemEquip[0] = true;
+                                                        Console.Clear();
+                                                    }
+                                                    else
+                                                    {
+                                                        item.itemEquip[0] = false;
+                                                        Console.Clear();
+                                                    }
+                                                    continue;
+
+                                                case 2:
+                                                    if (item.itemEquip[1] == false)
+                                                    {
+                                                        item.itemEquip[1] = true;
+                                                        Console.Clear();
+                                                    }
+                                                    else
+                                                    {
+                                                        item.itemEquip[1] = false;
+                                                        Console.Clear();
+                                                    }
+                                                    continue;
+
+                                                case 3:
+                                                    if (item.itemEquip[2] == false)
+                                                    {
+                                                        item.itemEquip[2] = true;
+                                                        Console.Clear();
+                                                    }
+                                                    else
+                                                    {
+                                                        item.itemEquip[2] = false;
+                                                        Console.Clear();
+                                                    }
+                                                    continue;
+
+                                                default:
+                                                    Console.Clear();
+                                                    Console.WriteLine("잘못된 입력입니다.\n");
+                                                    continue;
+                                            }
+
+                                        break;
+                                        }
+                                        else
+                                        {
+                                            Console.Clear();
+                                            Console.WriteLine("잘못된 입력입니다.\n");
+                                        }
+                                    }
+                                }
+                                else if (SuccessInput == 0)
+                                {
+                                    Console.Clear();
+                                    break;
+                                }
+                                else
+                                {
+                                    Console.Clear();
+                                    Console.WriteLine("잘못된 입력입니다.\n");
+                                }
+                            }
+                            else
+                            {
+                                Console.Clear();
+                                Console.WriteLine("잘못된 입력입니다.\n");
+                            }
+                        }
                     }
                     else
                     {
@@ -126,9 +245,17 @@
                     Console.WriteLine("잘못된 입력입니다.\n게임 시작 화면으로 돌아갑니다.\n");
                 }
             }
-            
         }
-
-    
     }
 }
+
+
+
+
+
+
+
+
+
+
+
